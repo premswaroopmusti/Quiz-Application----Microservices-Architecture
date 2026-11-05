@@ -197,9 +197,9 @@ QuizDto is used as the request model for quiz creation.
 **Persistence**
 - Database: PostgreSQL
 
-OpenFeign integration
+**OpenFeign integration**
 
-**Quiz Service declares a Feign client:**
+Quiz Service declares a Feign client:
 ```
 @FeignClient("QUESTION-SERVICE")
 public interface QuizInterface {
@@ -215,54 +215,39 @@ retrieve question details, and calculate scores.
 The Service Registry provides a central place for service registration
 and discovery.
 
-Implementation
+**Implementation**
 - Uses Spring Cloud Netflix Eureka Server.
 - Enables the server using @EnableEurekaServer.
-- Runs on port 8761.
-  
-Configuration
-spring.application.name=service-registry
-server.port=8761
 
-eureka.instance.hostname=localhost
-eureka.client.fetch-registry=false
-eureka.client.register-with-eureka=false
-
-Dashboard
+**Dashboard**
 Open the Eureka dashboard at:
 http://localhost:8761
 
 The dashboard can be used to view registered application instances and
 their status.
 
-During testing, the dashboard showed:
+**During testing, the dashboard showed:**
 - API-GATEWAY -- one instance
 - QUIZ-SERVICE -- one instance
 - QUESTION-SERVICE -- two instances
-</details>
 
 ### 4. API Gateway
 
 The API Gateway provides a single entry point for client requests and
 forwards requests to the appropriate backend service.
 
-Implementation
+**Implementation**
 - Spring Cloud Gateway Server MVC (Servlet-based Gateway)
 - Eureka Client for service discovery
-- Runs on port 8765
   
-Configured Quiz Service route
-spring.cloud.gateway.server.webmvc.routes[0].id=quiz-service
-spring.cloud.gateway.server.webmvc.routes[0].uri=lb://quiz-service
-spring.cloud.gateway.server.webmvc.routes[0].predicates[0]=Path=/quiz-service/**
-spring.cloud.gateway.server.webmvc.routes[0].filters[0]=StripPrefix=1
-
-How the route works
+**How the route works**
 
 A client sends:
+```
 http://localhost:8765/quiz-service/quiz/get/1
+```
 
-The Gateway:
+**The Gateway:**
 1. Matches the /quiz-service/** path.
 2. Uses lb://quiz-service to resolve a Quiz Service instance through
    service discovery and Spring Cloud LoadBalancer.
@@ -276,40 +261,38 @@ for Question Service; Quiz Service reaches Question Service through
 OpenFeign.
 
 ### Technology Stack
-  Area                                Technologies
-  Language                            Java 17
 
-  Framework                           Spring Boot 4.1.2
+- **Language :** Java 17
 
-  Microservices                       Spring Cloud
+- **Framework :** Spring Boot 4.1.2
 
-  API development                     Spring Web MVC, REST APIs
+- **Microservices :** Spring Cloud
 
-  API Gateway                         Spring Cloud Gateway Server MVC
+- **API development :** Spring Web MVC, REST APIs
 
-  Service discovery                   Spring Cloud Netflix Eureka Server and Client
+- **API Gateway :** Spring Cloud Gateway Server MVC
 
-  Inter-service communication         Spring Cloud OpenFeign
+- **Service discovery :** Spring Cloud Netflix Eureka Server and Client
 
-  Load balancing                      Spring Cloud LoadBalancer (through service discovery integration)
+- **Inter-service communication :** Spring Cloud OpenFeign
 
-  Persistence                         Spring Data JPA, Hibernate
+- **Load balancing :** Spring Cloud LoadBalancer (through service discovery integration)
 
-  Databases                           PostgreSQL
+- **Persistence :** Spring Data JPA, Hibernate
 
-  Boilerplate reduction               Project Lombok
+- **Databases :** PostgreSQL
 
-  Build and dependency management     Maven
+- **Boilerplate reduction :** Project Lombok
 
-  API testing                         Postman
+- **Build and dependency management :** Maven
 
-  Database administration             pgAdmin 4
+- **API testing :** Postman
 
+- **Database administration :** pgAdmin 4
 
-IDE                                 IntelliJ IDEA
-Spring Cloud release train configured in the Maven projects: 2025.1.4.
+- **IDE :** IntelliJ IDEA
 
-Database Design
+#### Database Design
 The microservices use separate PostgreSQL databases in the supplied
 configuration.
 
