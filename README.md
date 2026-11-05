@@ -293,9 +293,10 @@ OpenFeign.
 
 - **IDE :** IntelliJ IDEA
 
-#### Database Design
+## Database Design
 The microservices use separate PostgreSQL databases in the supplied
 configuration.
+
 
 
 <img width="757" height="747" alt="image" src="https://github.com/user-attachments/assets/40695f60-970e-4c19-afbc-0d0712a0fac1" />
