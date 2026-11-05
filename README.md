@@ -14,7 +14,7 @@ client-side load balancing, synchronous inter-service communication,
 REST API design, and independent database configuration.
 
 
-Table of Contents
+## Table of Contents
 - Project Evolution
 - Architecture
 - Services
@@ -37,8 +37,8 @@ Table of Contents
 
 
 
-Project Evolution
-1. Monolithic Version -- QuizApp
+## Project Evolution
+### 1. Monolithic Version -- QuizApp
 The application was first developed as a single Spring Boot application
 containing:
 - Question Controller and Question Service
@@ -47,26 +47,23 @@ containing:
 - Question, Quiz, QuestionWrapper, and Response models
 In this version, quiz creation, question retrieval, and score
 calculation were handled within the same application.
-2. Microservices Version
+
+### 2. Microservices Version
 The monolithic application was then used as the reference for a new
 microservices implementation. Responsibilities were separated into
 independent services:
   Component                           Responsibility
-  Question Service                    Owns question data and provides
-question-related APIs
+  Question Service                    Owns question data and provides question-related APIs
 
-  Quiz Service                        Creates quizzes, stores question
-IDs, retrieves quiz questions, and
-submits answers
+  Quiz Service                        Creates quizzes, stores question IDs, retrieves quiz questions, and submits answers
 
-  Eureka Service Registry             Maintains registered service
-instances and supports service
-discovery
-API Gateway                         Provides a common entry point and
-routes client requests to backend
-services
+  Eureka Service Registry             Maintains registered service instances and supports service discovery
+
+API Gateway                         Provides a common entry point and routes client requests to backend services
+
 The original monolithic application was kept separately; the
 microservices implementation is a separate version.
+
 Architecture
                          Client / Postman
                                 |
@@ -119,23 +116,22 @@ Architecture
                   |     quizdb       |
                   |    PostgreSQL    |
                   +------------------+
-Service discovery: Quiz Service, Question Service instances, and API
+
+### Service discovery: Quiz Service, Question Service instances, and API
 Gateway register with Eureka. Quiz Service uses the logical service name
 QUESTION-SERVICE through OpenFeign instead of hardcoding a Question
 Service host and port.
 
-Gateway routing: Client requests to /quiz-service/** are routed to
+### Gateway routing: Client requests to /quiz-service/** are routed to
 Quiz Service using the lb://quiz-service URI. The StripPrefix=1
 filter removes the /quiz-service prefix before forwarding.
 
-Inter-service communication: Quiz Service invokes Question Service
+### Inter-service communication: Quiz Service invokes Question Service
 APIs through its Feign client.
-Services
+
+### Services
 1. Question Service
-<details>
-<summary>
-<strong>{=html}Responsibilities and implementation`</strong>`{=html}
-</summary>
+
 Question Service is responsible for managing question data and
 performing question-related operations.
 
@@ -147,6 +143,7 @@ Responsibilities
 - Retrieve question details for a supplied list of IDs.
 - Calculate the score by comparing submitted answers with the correct
   answers.
+  
 Important endpoints
   Method                  Endpoint                                                            Purpose
   GET                   /question/allQuestions                                            Retrieve all questions
@@ -156,13 +153,11 @@ category
 
   POST                  /question/add                                                     Add a question
 
-  GET                   /question/generate?categoryName={category}&numQuestions={count}   Generate random
-question IDs
+  GET                   /question/generate?categoryName={category}&numQuestions={count}   Generate random question IDs
 
-  POST                  /question/getQuestions                                            Retrieve question
-details by IDs
-POST                  /question/getScore                                                Calculate the score for
-submitted responses
+  POST                  /question/getQuestions                                            Retrieve question details by IDs
+POST                  /question/getScore                                                Calculate the score for submitted responses
+
 Question model
 
 The Question entity contains:
@@ -175,6 +170,7 @@ The Question entity contains:
 - rightAnswer
 - difficultylevel
 - category
+  
 Question response model
 
 QuestionWrapper is used to return question details and the four
@@ -184,17 +180,16 @@ Persistence
 - Database: PostgreSQL
 - Database name in the supplied configuration: questiondb
 - Repository: Spring Data JPA QuestionDao
+  
 Service registration
 spring.application.name=question-service
 eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
 The service was started as two instances on ports 8080 and 8081
 to test load balancing.
-</details>
-2. Quiz Service
-<details>
-<summary>
-<strong>{=html}Responsibilities and implementation`</strong>`{=html}
-</summary>
+
+
+### 2. Quiz Service
+
 Quiz Service manages quiz creation and quiz-related operations. It does
 not directly own the question records; it communicates with Question
 Service to obtain question IDs, question details, and scores.
@@ -204,31 +199,33 @@ Responsibilities
 - Store the generated question IDs with the quiz.
 - Retrieve quiz questions using a quiz ID.
 - Submit answers and request score calculation from Question Service.
+  
 Important endpoints
   Method                  Endpoint                Purpose
   POST                  /quiz/create          Create a quiz
 
-  GET                   /quiz/get/{id}        Retrieve questions for
-a quiz
-POST                  /quiz/submit/{id}     Submit answers and
-calculate the score
+  GET                   /quiz/get/{id}        Retrieve questions for a quiz
+POST                  /quiz/submit/{id}     Submit answers and calculate the score
+
 Quiz model
 
 The Quiz entity contains:
 - id
 - title
-- questionIds -- a list of question IDs stored using JPA
-  @ElementCollection
+- questionIds -- a list of question IDs stored using JPA @ElementCollection
+  
 QuizDto is used as the request model for quiz creation.
 
 Persistence
 - Database: PostgreSQL
 - Database name in the supplied configuration: quizdb
 - Repository: Spring Data JPA QuizDao
+  
 Service registration
 spring.application.name=quiz-service
 server.port=8090
 eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+
 OpenFeign integration
 
 Quiz Service declares a Feign client:
@@ -236,14 +233,12 @@ Quiz Service declares a Feign client:
 public interface QuizInterface {
     // Question Service API mappings
 }
+
 The Feign client calls the Question Service to generate question IDs,
 retrieve question details, and calculate scores.
-</details>
-3. Eureka Service Registry
-<details>
-<summary>
-<strong>{=html}Responsibilities and implementation`</strong>`{=html}
-</summary>
+
+### 3. Eureka Service Registry
+
 The Service Registry provides a central place for service registration
 and discovery.
 
@@ -251,6 +246,7 @@ Implementation
 - Uses Spring Cloud Netflix Eureka Server.
 - Enables the server using @EnableEurekaServer.
 - Runs on port 8761.
+  
 Configuration
 spring.application.name=service-registry
 server.port=8761
@@ -258,10 +254,9 @@ server.port=8761
 eureka.instance.hostname=localhost
 eureka.client.fetch-registry=false
 eureka.client.register-with-eureka=false
+
 Dashboard
-
 Open the Eureka dashboard at:
-
 http://localhost:8761
 
 The dashboard can be used to view registered application instances and
@@ -272,11 +267,9 @@ During testing, the dashboard showed:
 - QUIZ-SERVICE -- one instance
 - QUESTION-SERVICE -- two instances
 </details>
-4. API Gateway
-<details>
-<summary>
-<strong>{=html}Responsibilities and implementation`</strong>`{=html}
-</summary>
+
+### 4. API Gateway
+
 The API Gateway provides a single entry point for client requests and
 forwards requests to the appropriate backend service.
 
@@ -284,15 +277,18 @@ Implementation
 - Spring Cloud Gateway Server MVC (Servlet-based Gateway)
 - Eureka Client for service discovery
 - Runs on port 8765
+  
 Configured Quiz Service route
 spring.cloud.gateway.server.webmvc.routes[0].id=quiz-service
 spring.cloud.gateway.server.webmvc.routes[0].uri=lb://quiz-service
 spring.cloud.gateway.server.webmvc.routes[0].predicates[0]=Path=/quiz-service/**
 spring.cloud.gateway.server.webmvc.routes[0].filters[0]=StripPrefix=1
+
 How the route works
 
 A client sends:
 http://localhost:8765/quiz-service/quiz/get/1
+
 The Gateway:
 1. Matches the /quiz-service/** path.
 2. Uses lb://quiz-service to resolve a Quiz Service instance through
@@ -300,12 +296,13 @@ The Gateway:
 3. Removes the first path segment (/quiz-service) using
    StripPrefix=1.
 4. Forwards /quiz/get/1 to Quiz Service.
+   
 The Gateway is configured with an explicit Quiz Service route. The
 supplied configuration does not define a separate public Gateway route
 for Question Service; Quiz Service reaches Question Service through
 OpenFeign.
-</details>
-Technology Stack
+
+### Technology Stack
   Area                                Technologies
   Language                            Java 17
 
@@ -317,13 +314,11 @@ Technology Stack
 
   API Gateway                         Spring Cloud Gateway Server MVC
 
-  Service discovery                   Spring Cloud Netflix Eureka Server
-and Client
+  Service discovery                   Spring Cloud Netflix Eureka Server and Client
 
   Inter-service communication         Spring Cloud OpenFeign
 
-  Load balancing                      Spring Cloud LoadBalancer (through
-service discovery integration)
+  Load balancing                      Spring Cloud LoadBalancer (through service discovery integration)
 
   Persistence                         Spring Data JPA, Hibernate
 
@@ -336,18 +331,23 @@ service discovery integration)
   API testing                         Postman
 
   Database administration             pgAdmin 4
+
+
 IDE                                 IntelliJ IDEA
 Spring Cloud release train configured in the Maven projects: 2025.1.4.
+
 Database Design
 The microservices use separate PostgreSQL databases in the supplied
 configuration.
+
   Service                 Database                Data responsibility
   Question Service        questiondb            Question records
-Quiz Service            quizdb                Quiz records and their
-question ID collections
+  Quiz Service            quizdb                Quiz records and their question ID collections
+
 Question database
 Question Service uses the questiondb database to persist question
 information.
+
 Quiz database
 Quiz Service uses the quizdb database. Its Quiz entity stores the
 quiz title and the collection of associated question IDs.
@@ -355,17 +355,19 @@ quiz title and the collection of associated question IDs.
 The questionIds field is mapped with:
 @ElementCollection
 private List<Integer> questionIds;
+
 This allows Quiz Service to retain question references without storing
 the full question objects in its own Quiz entity.
 
 Note: The screenshots show generated PostgreSQL tables including
 quiz and quiz_question_ids. Hibernate may create or update schema
-objects based on the entity mappings.
+objects based on the entity mappings
+
 API Gateway Routes
 The configured public route is:
   Client-facing path      Destination service     Forwarded path
-  /quiz-service/**      quiz-service          Path after removing
-/quiz-service
+  /quiz-service/**      quiz-service          Path after removing /quiz-service
+
 Examples:
 
   Client request                  Forwarded endpoint
