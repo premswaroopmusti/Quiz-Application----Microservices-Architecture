@@ -1,17 +1,17 @@
 # Quiz-Application -- Microservices-Architecture
 
-A Spring Boot--based Quiz Application that was initially developed as a
-monolithic application and later redesigned into a microservices
-architecture.
+A **Spring Boot--based Quiz Application** that was initially developed as a
+***monolithic application*** and later redesigned into a ***microservices
+architecture.***
 
 The microservices version separates question management from quiz
-management. The services communicate through Spring Cloud OpenFeign,
-register with a central Netflix Eureka Service Registry, and are
-accessed through a Spring Cloud API Gateway.
+management. The services communicate through **Spring Cloud OpenFeign**,
+register with a **central Netflix Eureka Service Registry**, and are
+accessed through a **Spring Cloud API Gateway.**
 
-The project demonstrates service decomposition, service discovery,
+The project demonstrates **service decomposition, service discovery,
 client-side load balancing, synchronous inter-service communication,
-REST API design, and independent database configuration.
+REST API design, and independent database configuration.**
 
 
 ## Table of Contents
