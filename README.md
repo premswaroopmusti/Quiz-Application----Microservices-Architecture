@@ -331,5 +331,4 @@ Potential improvements for future versions include:
   calls.
 
 ## Author
-**Prem Swaroop**
-***Java Developer***
+Prem Swaroop
