@@ -304,40 +304,24 @@ configuration.
 <img width="747" height="906" alt="image" src="https://github.com/user-attachments/assets/0d58a910-68b5-4f01-8efb-2546ac379b1a" />
 <img width="531" height="232" alt="image" src="https://github.com/user-attachments/assets/d2718cfa-7ff4-44e7-8431-b92bcd0404fd" />
 
+## Application Flow
 
 
 <img width="567" height="552" alt="image" src="https://github.com/user-attachments/assets/f2b07c52-67a9-4b8e-a1d9-ecc5399a0655" />
 
+## Load Balancing
 
 <img width="727" height="717" alt="image" src="https://github.com/user-attachments/assets/c0bbe546-d7c0-47a3-9ae1-75b49ecab243" />
 <img width="731" height="487" alt="image" src="https://github.com/user-attachments/assets/023eb1f4-2758-426c-a6ae-20c458f13537" />
 
 
 
-
+## Concepts Demonstrated
 <img width="600" height="780" alt="image" src="https://github.com/user-attachments/assets/7b7b448a-d420-4fa2-9e32-fb05758d723c" />
 <img width="572" height="902" alt="image" src="https://github.com/user-attachments/assets/b119b64b-9410-44b6-b4b0-962e6ea3f548" />
 
 
-  
-Current Scope and Notes
-This README describes the implementation represented by the supplied
-source files and configuration.
-- The API Gateway currently has an explicit route for Quiz Service.
-- Quiz Service communicates with Question Service using OpenFeign.
-- Question Service is configured to run as two instances for the
-  load-balancing demonstration.
-- The supplied implementation uses PostgreSQL for both Question
-  Service and Quiz Service.
-- The code shown does not include Spring Security, JWT authentication,
-  or role-based authorization.
-- The code shown does not include Docker, Kubernetes, a message
-  broker, or a centralized configuration server.
-- The score calculation is delegated to Question Service.
-These capabilities are not claimed as implemented features.
-
-
-Future Enhancements
+## Future Enhancements
 Potential improvements for future versions include:
 
 - Add centralized configuration management.
@@ -346,14 +330,6 @@ Potential improvements for future versions include:
 - Add circuit breakers, timeouts, and retry policies for inter-service
   calls.
 
-
-  
-Author
-Prem Swaroop
-
-Java Developer
-License
-Add a license file to the repository if you intend to distribute the
-project under a specific open-source license.
-
-
+## Author
+**Prem Swaroop**
+***Java Developer***
