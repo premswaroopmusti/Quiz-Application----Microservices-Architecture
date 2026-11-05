@@ -297,7 +297,7 @@ OpenFeign.
 The microservices use separate PostgreSQL databases in the supplied
 configuration.
 
-
+## API Documentation
 
 <img width="757" height="747" alt="image" src="https://github.com/user-attachments/assets/40695f60-970e-4c19-afbc-0d0712a0fac1" />
 <img width="755" height="802" alt="image" src="https://github.com/user-attachments/assets/2600263d-6f87-4796-8561-bb9b253b908a" />
