@@ -306,14 +306,6 @@ configuration.
 
 
 
-<img width="926" height="927" alt="image" src="https://github.com/user-attachments/assets/8384f56d-be66-42fe-aac9-23aad3934ac3" />
-<img width="822" height="897" alt="image" src="https://github.com/user-attachments/assets/f5daba42-dda9-423b-af31-492b0efd4799" />
-<img width="832" height="870" alt="image" src="https://github.com/user-attachments/assets/91d0296e-3aa6-43ad-be24-a8c54bbad483" />
-<img width="822" height="302" alt="image" src="https://github.com/user-attachments/assets/5447a76b-28fb-4ac9-9697-34e245f7787f" />
-
-
-
-
 <img width="567" height="552" alt="image" src="https://github.com/user-attachments/assets/f2b07c52-67a9-4b8e-a1d9-ecc5399a0655" />
 
 
