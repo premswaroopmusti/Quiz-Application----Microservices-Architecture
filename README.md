@@ -66,7 +66,7 @@ microservices implementation is a separate version.
 
 Architecture
 
-<img width="480" height="856" alt="image" src="https://github.com/user-attachments/assets/98cba5fb-5702-4e57-ae80-418829592ea6" />
+
 
                          Client / Postman
                                 |
