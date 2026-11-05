@@ -343,342 +343,36 @@ Database Design
 The microservices use separate PostgreSQL databases in the supplied
 configuration.
 
-  Service                 Database                Data responsibility
-  Question Service        questiondb            Question records
-  Quiz Service            quizdb                Quiz records and their question ID collections
 
-Question database
-Question Service uses the questiondb database to persist question
-information.
+<img width="757" height="747" alt="image" src="https://github.com/user-attachments/assets/40695f60-970e-4c19-afbc-0d0712a0fac1" />
+<img width="755" height="802" alt="image" src="https://github.com/user-attachments/assets/2600263d-6f87-4796-8561-bb9b253b908a" />
+<img width="747" height="906" alt="image" src="https://github.com/user-attachments/assets/0d58a910-68b5-4f01-8efb-2546ac379b1a" />
+<img width="531" height="232" alt="image" src="https://github.com/user-attachments/assets/d2718cfa-7ff4-44e7-8431-b92bcd0404fd" />
 
-Quiz database
-Quiz Service uses the quizdb database. Its Quiz entity stores the
-quiz title and the collection of associated question IDs.
 
-The questionIds field is mapped with:
-@ElementCollection
-private List<Integer> questionIds;
 
-This allows Quiz Service to retain question references without storing
-the full question objects in its own Quiz entity.
+<img width="926" height="927" alt="image" src="https://github.com/user-attachments/assets/8384f56d-be66-42fe-aac9-23aad3934ac3" />
+<img width="822" height="897" alt="image" src="https://github.com/user-attachments/assets/f5daba42-dda9-423b-af31-492b0efd4799" />
+<img width="832" height="870" alt="image" src="https://github.com/user-attachments/assets/91d0296e-3aa6-43ad-be24-a8c54bbad483" />
+<img width="822" height="302" alt="image" src="https://github.com/user-attachments/assets/5447a76b-28fb-4ac9-9697-34e245f7787f" />
 
-Note: The screenshots show generated PostgreSQL tables including
-quiz and quiz_question_ids. Hibernate may create or update schema
-objects based on the entity mappings
 
-API Gateway Routes
-The configured public route is:
-  Client-facing path      Destination service     Forwarded path
-  /quiz-service/**      quiz-service          Path after removing /quiz-service
 
-Examples:
 
-  Client request                  Forwarded endpoint
-  /quiz-service/quiz/create     /quiz/create
-/quiz-service/quiz/get/1      /quiz/get/1
-/quiz-service/quiz/submit/1   /quiz/submit/1
+<img width="567" height="552" alt="image" src="https://github.com/user-attachments/assets/f2b07c52-67a9-4b8e-a1d9-ecc5399a0655" />
 
-Base URL:
-http://localhost:8765
-API Documentation
-All examples below use the API Gateway as the entry point.
-1. Create a Quiz
-Endpoint
-POST http://localhost:8765/quiz-service/quiz/create
-Content-Type: application/json
-Request body
-{
-  "category": "Java",
-  "numQuestions": 5,
-  "title": "Springers Quiz 1"
-}
-Successful response
-Success
-Quiz Service requests random question IDs from Question Service using
-the category and requested question count. It then stores the quiz title
-and returned IDs in quizdb.
-2. Get Quiz Questions
-Endpoint
-GET http://localhost:8765/quiz-service/quiz/get/1
-Example response
-[
-  {
-    "id": 9,
-    "questionTitle": "Which Java operator is used to concatenate two strings?",
-    "option1": "+",
-    "option2": "-",
-    "option3": "*",
-    "option4": "/"
-  },
-  {
-    "id": 8,
-    "questionTitle": "What is the purpose of the \"break\" statement in Java?",
-    "option1": "To terminate a loop or switch statement and transfer control to the next statement.",
-    "option2": "To skip the rest of the code in a loop and move to the next iteration.",
-    "option3": "To define a label for a loop or switch statement.",
-    "option4": "To check a condition and execute a block of code repeatedly."
-  }
-]
-The response contains question IDs, question titles, and options. The
-correct answer is not included in the QuestionWrapper response.
 
-The full response contains the questions associated with the requested
-quiz; the example above is shortened for readability.
-3. Submit Quiz Answers
-Endpoint
-POST http://localhost:8765/quiz-service/quiz/submit/1
-Content-Type: application/json
-Request body
-[
-  {
-    "id": 10,
-    "response": "ArrayList"
-  },
-  {
-    "id": 4,
-    "response": "throw"
-  },
-  {
-    "id": 7,
-    "response": "do-while loop"
-  },
-  {
-    "id": 2,
-    "response": "5"
-  },
-  {
-    "id": 6,
-    "response": "final int x = 5;"
-  }
-]
-Example response
-5
-Quiz Service forwards the submitted responses to Question Service.
-Question Service retrieves the corresponding questions, compares each
-submitted response with the stored correct answer, and returns the
-score.
-4. Question Service APIs
-These endpoints are available on Question Service itself and are also
-used internally by Quiz Service through OpenFeign.
-  Method                  Direct local endpoint                                                        Description
-  GET                   http://localhost:8080/question/allQuestions                                Get all questions
+<img width="727" height="717" alt="image" src="https://github.com/user-attachments/assets/c0bbe546-d7c0-47a3-9ae1-75b49ecab243" />
+<img width="731" height="487" alt="image" src="https://github.com/user-attachments/assets/023eb1f4-2758-426c-a6ae-20c458f13537" />
 
-  GET                   http://localhost:8080/question/category/Java                               Get questions by
-category
 
-  POST                  http://localhost:8080/question/add                                         Add a question
 
-  GET                   http://localhost:8080/question/generate?categoryName=Java&numQuestions=5   Generate random
-question IDs
 
-  POST                  http://localhost:8080/question/getQuestions                                Get question details
-for a list of IDs
-POST                  http://localhost:8080/question/getScore                                    Calculate score from
-submitted responses
-Question Service also runs on port 8081 as a second instance during
-the load-balancing test. Use the relevant instance port when testing it
-directly.
+<img width="600" height="780" alt="image" src="https://github.com/user-attachments/assets/7b7b448a-d420-4fa2-9e32-fb05758d723c" />
+<img width="572" height="902" alt="image" src="https://github.com/user-attachments/assets/b119b64b-9410-44b6-b4b0-962e6ea3f548" />
 
-Example add-question request
-POST http://localhost:8080/question/add
-Content-Type: application/json
-{
-  "questionTitle": "Which collection provides a dynamic array in Java?",
-  "option1": "HashMap",
-  "option2": "ArrayList",
-  "option3": "LinkedList",
-  "option4": "HashSet",
-  "rightAnswer": "ArrayList",
-  "difficultylevel": "Easy",
-  "category": "Java"
-}
-Application Flow
-The main quiz workflow is:
-1. Create quiz: The client sends a category, number of questions,
-   and quiz title to the API Gateway.
-2. Route request: The Gateway forwards the request to Quiz Service.
-3. Generate question IDs: Quiz Service calls Question Service
-   through OpenFeign.
-4. Select random questions: Question Service queries PostgreSQL and
-   returns random question IDs for the requested category.
-5. Persist quiz: Quiz Service stores the quiz title and question
-   IDs in its own PostgreSQL database.
-6. Retrieve quiz: When the client requests a quiz by ID, Quiz
-   Service reads its stored question IDs.
-7. Fetch question details: Quiz Service calls Question Service to
-   retrieve the corresponding question titles and options.
-8. Submit answers: The client submits question IDs and selected
-   answers.
-9. Calculate score: Quiz Service forwards the responses to Question
-   Service, which compares them with the correct answers and returns
-   the score.
-Load Balancing
-Two instances of Question Service were started to demonstrate load
-balancing:
 
-  Instance                             Port
-  Question Service -- Instance 1     8080
-Question Service -- Instance 2     8081
-
-Both instances use the same application name:
-spring.application.name=question-service
-They register with Eureka under the same logical service ID. Quiz
-Service uses the Feign client service name rather than a fixed instance
-URL:
-@FeignClient("QUESTION-SERVICE")
-public interface QuizInterface {
-}
-The project uses Spring Cloud's service discovery and load-balancing
-integration to select an available Question Service instance.
-Verifying the selected instance
-The Question Service controller injects Spring's Environment and
-prints the local server port:
-@Autowired
-Environment environment;
-
-System.out.println(environment.getProperty("local.server.port"));
-When requests were sent repeatedly, the console showed requests being
-handled by both ports 8080 and 8081.
-
-The Eureka dashboard also showed two registered QUESTION-SERVICE
-instances.
-
-This demonstrates service registration, service discovery, and
-instance-level request distribution.
-Run Locally
-Prerequisites
-Install and configure:
-- JDK 17
-- Maven
-- PostgreSQL
-- An IDE such as IntelliJ IDEA (optional)
-- Postman (for API testing)
-1. Create PostgreSQL databases
-Create the two databases used by the supplied service configurations:
-CREATE DATABASE questiondb;
-CREATE DATABASE quizdb;
-Update the username and password in each service's
-application.properties to match your local PostgreSQL setup.
-2. Start Eureka Service Registry
-Run the Service Registry Spring Boot application.
-
-Default address:
-http://localhost:8761
-Open the Eureka dashboard in a browser and verify that the registry is
-running.
-3. Start Question Service -- Instance 1
-Run Question Service using its configured port or specify port 8080:
-mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8080"
-4. Start Question Service -- Instance 2
-Start another instance of the same Question Service application on port
-8081:
-mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8081"
-Both instances should register with Eureka under QUESTION-SERVICE.
-
-If running from IntelliJ IDEA, create a second run configuration with
-the VM/application argument that overrides the server port to 8081.
-5. Start Quiz Service
-Run Quiz Service on its configured port:
-8090
-It should register with Eureka and use its Feign client to discover
-Question Service.
-6. Start API Gateway
-Run API Gateway on its configured port:
-8765
-The Gateway should register with Eureka and load its configured Quiz
-Service route.
-7. Verify registered services
-Open:
-http://localhost:8761
-Verify that the dashboard lists:
-- API-GATEWAY
-- QUIZ-SERVICE
-- QUESTION-SERVICE with two instances
-8. Test through Postman
-Use the Gateway base URL:
-http://localhost:8765
-For example:
-POST http://localhost:8765/quiz-service/quiz/create
-GET  http://localhost:8765/quiz-service/quiz/get/1
-POST http://localhost:8765/quiz-service/quiz/submit/1
-Configuration
-The following are the important configuration values from the supplied
-project files.
-  Component               Property                                  Value
-  Service Registry        server.port                             8761
-
-  Question Service        spring.application.name                 question-service
-
-  Question Service        PostgreSQL database                       questiondb
-
-  Quiz Service            server.port                             8090
-
-  Quiz Service            spring.application.name                 quiz-service
-
-  Quiz Service            PostgreSQL database                       quizdb
-
-  API Gateway             server.port                             8765
-Eureka URL              eureka.client.service-url.defaultZone   http://localhost:8761/eureka/
-Question Service's two instances use ports 8080 and 8081 during the
-load-balancing test.
-
-Local configuration reminder: The supplied properties contain local
-database credentials. Replace them with your own values. Do not commit
-real passwords or secrets to GitHub. For a public repository, use
-environment variables or an untracked local configuration file.
-Concepts Demonstrated
-This project provided practical implementation experience with the
-following concepts:
-Spring Boot and REST APIs
-- Building REST controllers with @RestController.
-- Mapping endpoints with @GetMapping and @PostMapping.
-- Accepting request parameters, path variables, and JSON request
-  bodies.
-- Returning responses using ResponseEntity.
-- Separating controller, service, repository/DAO, and model
-  responsibilities.
-Microservices Architecture
-- Splitting a monolithic application into independently running
-  services.
-- Assigning separate responsibilities to Question Service and Quiz
-  Service.
-- Maintaining service-specific database configurations.
-- Communicating between services through HTTP APIs.
-Service Discovery with Eureka
-- Enabling Eureka Server with @EnableEurekaServer.
-- Registering services as Eureka clients.
-- Discovering services by logical application name.
-- Viewing registered instances on the Eureka dashboard.
-Inter-Service Communication with OpenFeign
-- Enabling Feign clients using @EnableFeignClients.
-- Defining service interfaces using @FeignClient.
-- Mapping remote endpoints with @GetMapping and @PostMapping.
-- Calling Question Service without hardcoding its host and port in
-  Quiz Service.
-Client-Side Load Balancing
-- Registering multiple instances of the same service.
-- Running Question Service on ports 8080 and 8081.
-- Using service discovery and Spring Cloud LoadBalancer integration.
-- Observing the selected instance using
-  Environment.getProperty("local.server.port").
-API Gateway
-- Using Spring Cloud Gateway Server MVC.
-- Configuring routes with Path predicates.
-- Using lb:// service URIs.
-- Applying StripPrefix to transform the incoming request path.
-- Exposing a common entry point for client requests.
-Persistence with Spring Data JPA
-- Mapping entities using @Entity, @Id, and @GeneratedValue.
-- Creating repositories using JpaRepository.
-- Using derived query methods such as findByCategory.
-- Using a native SQL query to select random questions by category.
-- Mapping a collection of question IDs using @ElementCollection.
-API Testing and Database Inspection
-- Testing REST endpoints with Postman.
-- Inspecting registered services using the Eureka dashboard.
-- Inspecting PostgreSQL databases and generated tables using pgAdmin
-  4.
-- Verifying quiz records and their associated question IDs.
+  
 Current Scope and Notes
 This README describes the implementation represented by the supplied
 source files and configuration.
@@ -694,20 +388,19 @@ source files and configuration.
   broker, or a centralized configuration server.
 - The score calculation is delegated to Question Service.
 These capabilities are not claimed as implemented features.
+
+
 Future Enhancements
 Potential improvements for future versions include:
-- Add Spring Security with JWT-based authentication and authorization.
-- Add request validation and centralized exception handling.
-- Add automated unit and integration tests for service and controller
-  layers.
-- Add Docker Compose to start PostgreSQL and all services together.
+
 - Add centralized configuration management.
 - Add distributed tracing and centralized logging.
 - Add health checks, metrics, and monitoring.
 - Add circuit breakers, timeouts, and retry policies for inter-service
   calls.
-- Add API documentation using OpenAPI/Swagger.
-- Add CI/CD automation.
+
+
+  
 Author
 Prem Swaroop
 
