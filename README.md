@@ -120,19 +120,19 @@ microservices implementation is a separate version.
                   |    PostgreSQL    |
                   +------------------+
 
-### Service discovery: Quiz Service, Question Service instances, and API
+#### Service discovery: Quiz Service, Question Service instances, and API
 Gateway register with Eureka. Quiz Service uses the logical service name
 QUESTION-SERVICE through OpenFeign instead of hardcoding a Question
 Service host and port.
 
-### Gateway routing: Client requests to /quiz-service/** are routed to
+#### Gateway routing: Client requests to /quiz-service/** are routed to
 Quiz Service using the lb://quiz-service URI. The StripPrefix=1
 filter removes the /quiz-service prefix before forwarding.
 
-### Inter-service communication: Quiz Service invokes Question Service
+#### Inter-service communication: Quiz Service invokes Question Service
 APIs through its Feign client.
 
-### Services
+## Services
 1. Question Service
 
 Question Service is responsible for managing question data and
