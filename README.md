@@ -261,7 +261,7 @@ supplied configuration does not define a separate public Gateway route
 for Question Service; Quiz Service reaches Question Service through
 OpenFeign.
 
-### Technology Stack
+## Technology Stack
 
 - **Language :** Java 17
 
