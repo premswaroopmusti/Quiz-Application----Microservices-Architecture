@@ -52,14 +52,14 @@ calculation were handled within the same application.
 The monolithic application was then used as the reference for a new
 microservices implementation. Responsibilities were separated into
 independent services:
-  Component                           Responsibility
-  Question Service                    Owns question data and provides question-related APIs
 
-  Quiz Service                        Creates quizzes, stores question IDs, retrieves quiz questions, and submits answers
+**Question Service** : Owns question data and provides question-related APIs
 
-  Eureka Service Registry             Maintains registered service instances and supports service discovery
+**Quiz Service** : Creates quizzes, stores question IDs, retrieves quiz questions, and submits answers
 
-API Gateway                         Provides a common entry point and routes client requests to backend services
+**Eureka Service Registry** : Maintains registered service instances and supports service discovery
+
+**API Gateway** : Provides a common entry point and routes client requests to backend services
 
 The original monolithic application was kept separately; the
 microservices implementation is a separate version.
