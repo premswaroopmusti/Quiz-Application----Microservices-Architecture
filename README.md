@@ -133,12 +133,12 @@ Quiz Service invokes Question Service APIs through its Feign client.
 
 
 ## Services
-1. Question Service
+### 1. Question Service
 
 Question Service is responsible for managing question data and
 performing question-related operations.
 
-Responsibilities
+**Responsibilities**
 - Retrieve all questions.
 - Retrieve questions by category.
 - Add questions.
@@ -148,7 +148,7 @@ Responsibilities
   answers.
   
 
-Question model
+**Question model** 
 
 The Question entity contains:
 - id
@@ -161,12 +161,12 @@ The Question entity contains:
 - difficultylevel
 - category
   
-Question response model
+**Question response model**
 
 QuestionWrapper is used to return question details and the four
 options without exposing the rightAnswer field.
 
-Persistence
+**Persistence**
 - Database: PostgreSQL
 
 The service was started as two instances on ports 8080 and 8081
@@ -179,20 +179,13 @@ Quiz Service manages quiz creation and quiz-related operations. It does
 not directly own the question records; it communicates with Question
 Service to obtain question IDs, question details, and scores.
 
-Responsibilities
+**Responsibilities**
 - Create a quiz using a category, number of questions, and title.
 - Store the generated question IDs with the quiz.
 - Retrieve quiz questions using a quiz ID.
 - Submit answers and request score calculation from Question Service.
-  
-Important endpoints
-  Method                  Endpoint                Purpose
-  POST                  /quiz/create          Create a quiz
 
-  GET                   /quiz/get/{id}        Retrieve questions for a quiz
-POST                  /quiz/submit/{id}     Submit answers and calculate the score
-
-Quiz model
+**Quiz model**
 
 The Quiz entity contains:
 - id
@@ -201,23 +194,18 @@ The Quiz entity contains:
   
 QuizDto is used as the request model for quiz creation.
 
-Persistence
+**Persistence**
 - Database: PostgreSQL
-- Database name in the supplied configuration: quizdb
-- Repository: Spring Data JPA QuizDao
-  
-Service registration
-spring.application.name=quiz-service
-server.port=8090
-eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
 
 OpenFeign integration
 
-Quiz Service declares a Feign client:
+**Quiz Service declares a Feign client:**
+```
 @FeignClient("QUESTION-SERVICE")
 public interface QuizInterface {
     // Question Service API mappings
 }
+```
 
 The Feign client calls the Question Service to generate question IDs,
 retrieve question details, and calculate scores.
