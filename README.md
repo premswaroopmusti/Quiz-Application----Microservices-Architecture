@@ -131,6 +131,7 @@ The StripPrefix=1 filter removes the /quiz-service prefix before forwarding.
 #### Inter-service communication: 
 Quiz Service invokes Question Service APIs through its Feign client.
 
+
 ## Services
 1. Question Service
 
@@ -146,19 +147,6 @@ Responsibilities
 - Calculate the score by comparing submitted answers with the correct
   answers.
   
-Important endpoints
-  Method                  Endpoint                                                            Purpose
-  GET                   /question/allQuestions                                            Retrieve all questions
-
-  GET                   /question/category/{category}                                     Retrieve questions by
-category
-
-  POST                  /question/add                                                     Add a question
-
-  GET                   /question/generate?categoryName={category}&numQuestions={count}   Generate random question IDs
-
-  POST                  /question/getQuestions                                            Retrieve question details by IDs
-POST                  /question/getScore                                                Calculate the score for submitted responses
 
 Question model
 
@@ -180,12 +168,7 @@ options without exposing the rightAnswer field.
 
 Persistence
 - Database: PostgreSQL
-- Database name in the supplied configuration: questiondb
-- Repository: Spring Data JPA QuestionDao
-  
-Service registration
-spring.application.name=question-service
-eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+
 The service was started as two instances on ports 8080 and 8081
 to test load balancing.
 
